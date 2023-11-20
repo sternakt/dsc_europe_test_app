@@ -33,24 +33,3 @@ async def on_names(msg: Name, logger: Logger) -> None:
     logger.info(result)
     greeting = Greeting(greeting=result)
     await to_greetings.publish(greeting)
-
-
-@app.after_startup
-async def publish_names() -> None:
-    async def _publish_names() -> None:
-        names = [
-            "Ana",
-            "Mario",
-            "Pedro",
-            "João",
-            "Gustavo",
-            "Joana",
-            "Mariana",
-            "Juliana",
-        ]
-        while True:
-            name = random.choice(names)  # nosec
-            await broker.publish(Name(name=name), topic="names")
-            await asyncio.sleep(2)
-
-    asyncio.create_task(_publish_names())
